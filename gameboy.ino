@@ -11,6 +11,7 @@ int btn6 = 17;
 
 int lives = 3;
 int score = 0;
+int topScore = 0;
 
 int correctButton = 0;
 int timer = millis();
@@ -21,6 +22,7 @@ int dispGame(); // outputs correct button and outputs the game screen
 int readButton(); // checks which button is pressed and outputs button value else 0
 void dispGameEnd();
 void dispMainScreen();
+void saveTopScore(int score);
 
 void setup()
 {
@@ -41,11 +43,14 @@ bool startGame(){
         while(millis()-timer < waitTime){
             if (correctButton == readButton() ){
                 lives ++;
+                score ++;
                 break;
             }
         }
         lives --;
     }
+    topScore = score;
+    saveTopScore(topScore);
     timer = millis();
     while(millis()-timer < waitTime){
         dispGameEnd();
@@ -72,5 +77,70 @@ void dispMainScreen(){
     lcd.backlight();
     
     lcd.setCursor(0, 0);
-    lcd.print("yolo");
+    lcd.print("Press any button to start");
+    lcd.setCursor(1, 3);
+    lcd.print(" to start");
+}
+
+void dispGameEnd(){
+    lcd.backlight();
+    
+    lcd.setCursor(0, 4);
+    lcd.print("GAME OVER");
+    lcd.setCursor(1, 0);
+    lcd.print("top-");
+    lcd.setCursor(1, 5);
+    lcd.print(score);
+    lcd.setCursor(1, 8);
+    lcd.print("now-");
+    lcd.setCursor(1, 13);
+    lcd.print(score);
+
+
+}
+
+int dispGame(){
+    lcd.backlight();
+    lcd.setCursor(0, 0);
+    lcd.print("score-");
+    lcd.setCursor(0, 7);
+    lcd.print(score);
+
+    int randNo = random(6);
+    switch (randNo)
+    {
+    case 1:
+        lcd.setCursor(1, 0);
+        lcd.print("1");
+        return bt1;
+        break;
+    case 2:
+        lcd.setCursor(1, 2);
+        lcd.print("2");
+        return bt2;
+        break;
+    case 3:
+        lcd.setCursor(1, 4);
+        lcd.print("3");
+        return bt3;
+        break;
+    case 4:
+        lcd.setCursor(1, 6);
+        lcd.print("4");
+        return bt4;
+        break;
+    case 5:
+        lcd.setCursor(1, 8);
+        lcd.print("5");
+        return bt5;
+        break;
+    case 6:
+        lcd.setCursor(1, 10);
+        lcd.print("6");
+        return bt6;
+        break;
+    
+    default:
+        break;
+    }
 }
