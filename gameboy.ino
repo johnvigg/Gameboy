@@ -28,6 +28,7 @@ void saveTopScore(int score);
 void setup()
 {
     pinMode(btn1, INPUT_PULLUP);
+    pinMode(btn2, INPUT_PULLUP);
     Serial.begin(9600);
     lcd.init();
     Serial.println("started");
@@ -55,21 +56,22 @@ bool startGame()
         int buttonPressed ;
         timer = millis();
         while(millis()-timer < waitTime && flag==1)
-            {
-             Serial.println("Entered while loop");
-            if(buttonPressed = readButton()){
-              if(correctButton == buttonPressed)
+        {
+            Serial.println("Entered while loop");
+            buttonPressed = readButton();
+              if((correctButton == buttonPressed)&&(buttonPressed =! 0))
               {
                  lives ++;
                   score ++;
                   Serial.println("breaked");
                 flag=0;
-              }
+              }else if((correctButton != buttonPressed)&&(buttonPressed =! 0))
+                break;
               
-             } 
-            }
+            
+        }
             lives --;
-            }
+        }
             
     topScore = score;
     
@@ -92,8 +94,13 @@ int readButton(){
       return btn1;
     }
         
-//    if (digitalRead(btn2))
-//        return btn2;
+    if (!digitalRead(btn2)){
+        delay(75);
+      while(!digitalRead(btn1)){delay(1);}
+      Serial.println("button pressed");
+        return btn2;
+
+    }
 //    if (digitalRead(btn3))
 //        return btn3;
 //    if (digitalRead(btn4))
@@ -138,26 +145,22 @@ int dispGame(){
     lcd.print("score:");
     lcd.setCursor(7, 0);
     lcd.print(score);
-
-lcd.setCursor(10, 0);
+    lcd.setCursor(10, 0);
     lcd.print(lives);
 
-    lcd.setCursor(1, 1);
-    lcd.print("1");
-    return btn1;
-//    int randNo = random(6);
-//    switch (randNo)
-//    {
-//    case 1:
-//        lcd.setCursor(1, 0);
-//        lcd.print("1");
-//        return btn1;
-//        break;
-//    case 2:
-//        lcd.setCursor(1, 2);
-//        lcd.print("2");
-//        return btn2;
-//        break;
+   int randNo = random(2);
+   switch (randNo)
+   {
+   case 1:
+       lcd.setCursor(1, 1);
+       lcd.print("1");
+       return btn1;
+       break;
+   case 2:
+       lcd.setCursor(1, 3);
+       lcd.print("2");
+       return btn2;
+       break;
 //    case 3:
 //        lcd.setCursor(1, 4);
 //        lcd.print("3");
@@ -179,7 +182,7 @@ lcd.setCursor(10, 0);
 //        return btn6;
 //        break;
 //    
-//    default:
-//        break;
-//    }
+   default:
+       break;
+   }
 }
