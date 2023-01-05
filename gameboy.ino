@@ -52,33 +52,43 @@ bool startGame()
     while (lives > 0)
         {
         flag=1;
+        delay(100);
         correctButton = dispGame();
         int buttonPressed ;
         timer = millis();
         while(millis()-timer < waitTime && flag==1)
         {
-            Serial.println("Entered while loop");
+            
             buttonPressed = readButton();
-              if((correctButton == buttonPressed)&&(buttonPressed =! 0))
+            
+              if((correctButton == buttonPressed)&&(buttonPressed != 0))
               {
+                
                  lives ++;
                   score ++;
-                  Serial.println("breaked");
                 flag=0;
-              }else if((correctButton != buttonPressed)&&(buttonPressed =! 0))
+              }else if((correctButton != buttonPressed)&&(buttonPressed != 0)){
+                 Serial.println("Entered while loop");
+            Serial.print("correct button = ");
+            Serial.println(correctButton);
+            Serial.print("button pressed = ");
+            Serial.println(buttonPressed);
+              Serial.println("breaked");
                 break;
+              
+              }
               
             
         }
             lives --;
         }
-            
-    topScore = score;
+    if(score>topScore)        
+      topScore = score;
     
     // saveTopScore(topScore);
     lcd.clear();
     timer = millis();
-    while(millis()-timer < waitTime){
+    while(millis()-timer < 2*waitTime){
         dispGameEnd();
         delay(10);
     }
@@ -96,19 +106,39 @@ int readButton(){
         
     if (!digitalRead(btn2)){
         delay(75);
-      while(!digitalRead(btn1)){delay(1);}
+      while(!digitalRead(btn2)){delay(1);}
       Serial.println("button pressed");
         return btn2;
 
     }
-//    if (digitalRead(btn3))
-//        return btn3;
-//    if (digitalRead(btn4))
-//        return btn4;
-//    if (digitalRead(btn5))
-//        return btn5;
-//    if (digitalRead(btn6))
-//        return btn6;
+    if (!digitalRead(btn3)){
+        delay(75);
+      while(!digitalRead(btn3)){delay(1);}
+      Serial.println("button pressed");
+        return btn3;
+
+    }
+    if (!digitalRead(btn4)){
+        delay(75);
+      while(!digitalRead(btn4)){delay(1);}
+      Serial.println("button pressed");
+        return btn4;
+
+    }
+    if (!digitalRead(btn5)){
+        delay(75);
+      while(!digitalRead(btn5)){delay(1);}
+      Serial.println("button pressed");
+        return btn5;
+
+    }
+    if (!digitalRead(btn6)){
+        delay(75);
+      while(!digitalRead(btn6)){delay(1);}
+      Serial.println("button pressed");
+        return btn6;
+
+    }
     return 0;
 }
 
@@ -148,40 +178,42 @@ int dispGame(){
     lcd.setCursor(10, 0);
     lcd.print(lives);
 
-   int randNo = random(2);
+   int randNo = random(6)+1;
    switch (randNo)
    {
    case 1:
+        Serial.println(randNo);
        lcd.setCursor(1, 1);
        lcd.print("1");
        return btn1;
        break;
    case 2:
+   Serial.println(randNo);
        lcd.setCursor(1, 3);
        lcd.print("2");
        return btn2;
        break;
-//    case 3:
-//        lcd.setCursor(1, 4);
-//        lcd.print("3");
-//        return btn3;
-//        break;
-//    case 4:
-//        lcd.setCursor(1, 6);
-//        lcd.print("4");
-//        return btn4;
-//        break;
-//    case 5:
-//        lcd.setCursor(1, 8);
-//        lcd.print("5");
-//        return btn5;
-//        break;
-//    case 6:
-//        lcd.setCursor(1, 10);
-//        lcd.print("6");
-//        return btn6;
-//        break;
-//    
+   case 3:
+       lcd.setCursor(1, 5);
+       lcd.print("3");
+       return btn3;
+       break;
+   case 4:
+       lcd.setCursor(1, 7);
+       lcd.print("4");
+       return btn4;
+       break;
+   case 5:
+       lcd.setCursor(1, 9);
+       lcd.print("5");
+       return btn5;
+       break;
+   case 6:
+       lcd.setCursor(1, 11);
+       lcd.print("6");
+       return btn6;
+       break;
+   
    default:
        break;
    }
